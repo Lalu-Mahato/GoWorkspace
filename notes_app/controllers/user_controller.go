@@ -27,9 +27,9 @@ func (uc *UserController) FindUsers(c *gin.Context) {
 }
 
 func (uc *UserController) CreateUser(c *gin.Context) {
-	user := c.MustGet("validatedUser").(models.User)
+	user := c.MustGet("validatedModel").(*models.User)
 
-	err := uc.userService.CreateUser(&user)
+	err := uc.userService.CreateUser(user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 		return

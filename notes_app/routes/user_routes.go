@@ -4,6 +4,7 @@ import (
 	"notes_app/config"
 	"notes_app/controllers"
 	"notes_app/middlewares"
+	"notes_app/models"
 	"notes_app/repositories"
 	"notes_app/services"
 
@@ -18,6 +19,6 @@ func UserRoutes(router *gin.Engine) {
 
 	api := router.Group("/users")
 	api.GET("/", userController.FindUsers)
-	api.POST("/", middlewares.ValidationMiddleware(), userController.CreateUser)
+	api.POST("/", middlewares.ValidationMiddleware(&models.User{}), userController.CreateUser)
 	api.POST("/upload", userController.UploadFile)
 }

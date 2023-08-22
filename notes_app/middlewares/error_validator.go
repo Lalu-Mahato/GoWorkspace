@@ -3,28 +3,26 @@ package middlewares
 import (
 	"fmt"
 	"net/http"
-	"notes_app/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
-func ValidationMiddleware() gin.HandlerFunc {
+func ValidationMiddleware(model interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		validate := validator.New()
-		var user models.User
 
-		if err := c.ShouldBindJSON(&user); err != nil {
+		if err := c.ShouldBindJSON(model); err != nil {
 			handleValidationErrors(c, err)
 			return
 		}
 
-		if err := validate.Struct(user); err != nil {
+		if err := validate.Struct(model); err != nil {
 			handleValidationErrors(c, err)
 			return
 		}
 
-		c.Set("validatedUser", user)
+		c.Set("validatedModel", model)
 		c.Next()
 	}
 }
