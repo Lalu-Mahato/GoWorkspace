@@ -14,3 +14,8 @@ type Note struct {
 	UpdatedAt time.Time      `json:"updatedAt" gorm:"index"`
 	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index"`
 }
+
+func (note *Note) BeforeCreate(tx *gorm.DB) (err error) {
+	note.ID = uint64(time.Now().UnixNano())
+	return
+}

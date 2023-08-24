@@ -10,7 +10,7 @@ const conferenceTickets = 50
 var conferenceName = "Go Conference"
 var bookings []string
 
-func main2() {
+func GoMain() {
 	var remainingTickets uint = 50
 	greeting(remainingTickets)
 
