@@ -18,6 +18,16 @@ type User struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
+type UserWithoutPassword struct {
+	ID        uint64 `json:"ID"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Status    bool   `json:"status"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt
+}
+
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 	user.ID = uint64(time.Now().UnixNano())
 	return

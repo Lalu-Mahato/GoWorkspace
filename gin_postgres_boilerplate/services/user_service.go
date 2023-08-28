@@ -14,19 +14,19 @@ func NewUserService(userRepository *repositories.UserRepository) *UserService {
 	return &UserService{userRepository: userRepository}
 }
 
-func (userService *UserService) GetUsers() ([]models.User, error) {
-	users, err := userService.userRepository.FindAll()
+func (us *UserService) GetUsers() ([]models.User, error) {
+	users, err := us.userRepository.FindAll()
 	if err != nil {
 		return nil, err
 	}
 	return users, nil
 }
 
-func (userService *UserService) CreateUser(user *models.User) error {
+func (us *UserService) CreateUser(user *models.User) error {
 	hashedPassword := utils.HashPassword(user.Password)
 	user.Password = hashedPassword
 
-	err := userService.userRepository.Create(user)
+	err := us.userRepository.Create(user)
 	if err != nil {
 		return err
 	}

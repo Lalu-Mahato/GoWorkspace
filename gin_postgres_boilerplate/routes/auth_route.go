@@ -11,13 +11,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthRoutes(router *gin.Engine) {
+func AuthRoutes(r *gin.Engine) {
 	db := config.DB
 
+	userRepository := repositories.NewUserRepository(db)
 	authRepository := repositories.NewAuthRepository(db)
-	authService := services.NewAuthService(authRepository)
+	authService := services.NewAuthService(authRepository, userRepository)
 	authController := controllers.NewAuthController(authService)
 
-	api := router.Group("/auth")
+	api := r.Group("/auth")
 	api.POST("/login", middlewares.ValidationMiddleware(&models.Login{}), authController.LoginUser)
 }

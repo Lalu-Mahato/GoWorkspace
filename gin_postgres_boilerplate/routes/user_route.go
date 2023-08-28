@@ -11,14 +11,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UserRoutes(router *gin.Engine) {
+func UserRoutes(r *gin.Engine) {
 	db := config.DB
 	userRepository := repositories.NewUserRepository(db)
 	userService := services.NewUserService(userRepository)
 	userController := controllers.NewUserController(userService)
 
-	api := router.Group("/users")
-	api.GET("/", userController.FindUsers)
+	api := r.Group("/users")
+	api.GET("/", middlewares.AuthMiddleware(), userController.FindUsers)
 	api.POST("/", middlewares.ValidationMiddleware(&models.User{}), userController.CreateUser)
 
 }
