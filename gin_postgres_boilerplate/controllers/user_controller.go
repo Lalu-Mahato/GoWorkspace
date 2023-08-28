@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/constants"
 	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/models"
 	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/services"
 	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/utils"
@@ -20,10 +21,10 @@ func NewUserController(userService *services.UserService) *UserController {
 func (uc *UserController) FindUsers(c *gin.Context) {
 	users, err := uc.userService.GetUsers()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve users"})
+		utils.InternalServerErrorResponse(c, constants.ErrorCodes["EU002"])
 		return
 	}
-	c.JSON(http.StatusOK, users)
+	utils.SuccessResponse(c, users)
 }
 
 func (uc *UserController) CreateUser(c *gin.Context) {
@@ -31,7 +32,7 @@ func (uc *UserController) CreateUser(c *gin.Context) {
 
 	err := uc.userService.CreateUser(user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+		utils.InternalServerErrorResponse(c, constants.ErrorCodes["EU001"])
 		return
 	}
 	userWithoutPassword := models.UserWithoutPassword{
@@ -53,6 +54,5 @@ func (uc *UserController) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Profile image upload failed"})
 		return
 	}
-
 	utils.SuccessResponse(c, file)
 }

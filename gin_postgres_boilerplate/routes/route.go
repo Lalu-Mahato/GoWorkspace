@@ -7,9 +7,9 @@ import (
 )
 
 func SetupRouter(r *gin.Engine) {
-	r.GET("/", func(c *gin.Context) {
+	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "Welcome to the application!",
+			"message": "pong",
 		})
 	})
 

@@ -27,7 +27,7 @@ func (as *AuthService) LoginUser(email, password string) (*models.User, error) {
 
 	isMatch := utils.CheckPasswordHash(password, user.Password)
 	if !isMatch {
-		return nil, errors.New("invalid password")
+		return nil, errors.New("password mismatch")
 	}
 
 	return user, nil

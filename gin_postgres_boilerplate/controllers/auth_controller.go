@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/constants"
 	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/models"
 	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/services"
 	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/utils"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,13 +22,14 @@ func (ac *AuthController) LoginUser(c *gin.Context) {
 
 	user, err := ac.authService.LoginUser(loginData.Email, loginData.Password)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		utils.UnauthorizedResponse(c, constants.ErrorCodes["EA001"])
 		return
 	}
 
 	token, error := utils.GenerateJWT(user.Email, user.ID)
 	if error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Something wrong in token generation"})
+		utils.ErrorResponse(c, constants.ErrorCodes["EA002"])
+		return
 	}
 	loggedInData := models.LoggedInResponse{
 		ID:        user.ID,

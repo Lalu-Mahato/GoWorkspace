@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"fmt"
-	"net/http"
+	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -36,6 +36,6 @@ func handleValidationErrors(c *gin.Context, err error) {
 		errorMessages = append(errorMessages, message)
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{"errors": errorMessages})
+	utils.ErrorResponse(c, errorMessages)
 	c.Abort()
 }

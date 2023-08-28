@@ -2,8 +2,9 @@ package middlewares
 
 import (
 	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/config"
+	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/constants"
 	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/repositories"
-	"net/http"
+	"github/Lalu-Mahato/GoWorkspace/gin_postgres_boilerplate/utils"
 	"os"
 	"strings"
 
@@ -18,14 +19,14 @@ func AuthMiddleware() gin.HandlerFunc {
 		authHeader := c.GetHeader("Authorization")
 
 		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is missing"})
+			utils.UnauthorizedResponse(c, constants.ErrorCodes["EA004"])
 			c.Abort()
 			return
 		}
 
 		tokenString := strings.Split(authHeader, " ")
 		if len(tokenString) != 2 || tokenString[0] != "Bearer" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization header format"})
+			utils.UnauthorizedResponse(c, constants.ErrorCodes["EA005"])
 			c.Abort()
 			return
 		}
@@ -36,14 +37,14 @@ func AuthMiddleware() gin.HandlerFunc {
 		})
 
 		if err != nil || !token.Valid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			utils.UnauthorizedResponse(c, constants.ErrorCodes["EA006"])
 			c.Abort()
 			return
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unable to parse claims"})
+			utils.UnauthorizedResponse(c, constants.ErrorCodes["EA007"])
 			c.Abort()
 			return
 		}
@@ -51,7 +52,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		db := config.DB
 		user, err := repositories.NewUserRepository(db).GetUserByEmail(claims["email"].(string))
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+			utils.UnauthorizedResponse(c, constants.ErrorCodes["EU003"])
 			c.Abort()
 			return
 		}
